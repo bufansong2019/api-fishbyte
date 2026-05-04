@@ -1,14 +1,21 @@
-import { renderHtml } from "./renderHtml";
+import { Hono } from "hono";
+import { cors } from "hono/cors";
+import { logger } from "hono/logger";
+import api from "./routes/api";
+import authRoutes from "./routes/api/auth";
+import admin from "./routes/admin";
 
-export default {
-	async fetch(request, env) {
-		const stmt = env.DB.prepare("SELECT * FROM comments LIMIT 3");
-		const { results } = await stmt.all();
+const app = new Hono<{ Bindings: Env }>();
 
-		return new Response(renderHtml(JSON.stringify(results, null, 2)), {
-			headers: {
-				"content-type": "text/html",
-			},
-		});
-	},
-} satisfies ExportedHandler<Env>;
+app.use("*", logger());
+app.use("/api/*", cors());
+
+app.get("/", (c) => c.json({ status: "ok", message: "FishByte API. Admin: /admin/login" }));
+app.get("/admin", (c) => c.redirect("/admin/dashboard", 302));
+app.get("/admin/", (c) => c.redirect("/admin/dashboard", 302));
+
+app.route("/api", api);
+app.route("/api/auth", authRoutes);
+app.route("/admin", admin);
+
+export default app;

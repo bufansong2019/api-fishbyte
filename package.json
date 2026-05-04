@@ -1,8 +1,8 @@
 {
 	"name": "api-fishbyte",
-	"description": "Cloudflare's native serverless SQL database.",
+	"description": "API - FishByte 管理后台",
 	"cloudflare": {
-		"label": "Worker + D1 Database",
+		"label": "API - FishByte 管理后台",
 		"products": [
 			"Workers",
 			"D1"
@@ -16,16 +16,27 @@
 		"publish": true
 	},
 	"devDependencies": {
+		"drizzle-kit": "^0.31.10",
 		"typescript": "5.9.3",
 		"wrangler": "4.56.0"
 	},
 	"private": true,
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild",
+			"workerd"
+		]
+	},
 	"scripts": {
 		"cf-typegen": "wrangler types",
 		"check": "tsc && wrangler deploy --dry-run",
 		"deploy": "wrangler deploy",
-		"dev": "pnpm seedLocalD1 && wrangler dev",
+		"dev": "wrangler d1 migrations apply DB --local && wrangler dev",
 		"predeploy": "wrangler d1 migrations apply DB --remote",
 		"seedLocalD1": "wrangler d1 migrations apply DB --local"
+	},
+	"dependencies": {
+		"drizzle-orm": "^0.45.2",
+		"hono": "^4.12.16"
 	}
 }

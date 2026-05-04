@@ -1,59 +1,110 @@
-# Worker + D1 Database
+# API - FishByte
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/d1-template)
+## ✨ 项目简介
 
-![Worker + D1 Template Preview](https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/cb7cb0a9-6102-4822-633c-b76b7bb25900/public)
+- 采用 **Hono** 轻量 Web 框架，基于 Cloudflare Workers 运行，性能优越
 
-<!-- dash-content-start -->
+- 搭配 **Drizzle ORM** 操作 D1 数据库，类型安全、语法简洁
 
-D1 is Cloudflare's native serverless SQL database ([docs](https://developers.cloudflare.com/d1/)). This project demonstrates using a Worker with a D1 binding to execute a SQL statement. A simple frontend displays the result of this query:
+- 内置 **Pico CSS** 管理后台，支持响应式布局与深色/浅色模式
 
-```SQL
-SELECT * FROM comments LIMIT 3;
+- 使用 **JWT** 身份认证 + **PBKDF2** 密码加密，安全可靠
+
+- 纯 TypeScript 编写，全栈类型安全
+
+## 🌐 在线访问
+
+管理后台已部署至 Cloudflare Workers：[👉 FishByte 管理后台](https://api-fishbyte.bufansong2019.workers.dev/admin/login)
+
+## 🚀 本地运行
+
+```bash
+# 克隆仓库
+git clone https://github.com/bufansong2019/api-fishbyte.git
+
+# 进入目录
+cd api-fishbyte
+
+# 安装依赖
+pnpm install
+
+# 初始化本地 D1 数据库并启动开发服务器
+pnpm dev
+
+# 部署到 Cloudflare Workers
+pnpm deploy
 ```
 
-The D1 database is initialized with a `comments` table and this data:
+## 🗄️ 数据库迁移
 
-```SQL
-INSERT INTO comments (author, content)
-VALUES
-    ('Kristian', 'Congrats!'),
-    ('Serena', 'Great job!'),
-    ('Max', 'Keep up the good work!')
-;
+```bash
+# 本地迁移
+pnpm seedLocalD1
+
+# 线上迁移
+pnpm predeploy
 ```
 
-> [!IMPORTANT]
-> When using C3 to create this project, select "no" when it asks if you want to deploy. You need to follow this project's [setup steps](https://github.com/cloudflare/templates/tree/main/d1-template#setup-steps) before deploying.
+## 📦 技术栈
 
-<!-- dash-content-end -->
+| 类别 | 技术 |
+|------|------|
+| 运行时 | Cloudflare Workers |
+| 数据库 | Cloudflare D1 (SQLite) |
+| Web 框架 | Hono v4 |
+| ORM | Drizzle ORM |
+| 认证 | JWT (HS256) + PBKDF2 |
+| 前端 | Pico CSS v2 |
+| 语言 | TypeScript |
+| 包管理 | pnpm |
+| 部署 | Wrangler CLI |
 
-## Getting Started
-
-Outside of this repo, you can start a new project with this template using [C3](https://developers.cloudflare.com/pages/get-started/c3/) (the `create-cloudflare` CLI):
+## 📁 项目结构
 
 ```
-npm create cloudflare@latest -- --template=cloudflare/templates/d1-template
+src/
+├── admin/          # 后台页面组件
+│   ├── layout.ts   # 整体布局 + 导航栏
+│   ├── login.ts    # 登录页
+│   ├── home.ts     # 首页（统计卡片 + 操作日志）
+│   ├── dashboard.ts# 数据库概览
+│   ├── table.ts    # 表数据查看器（支持筛选）
+│   ├── api-keys.ts # API 密钥管理
+│   ├── users.ts    # 用户管理
+│   ├── pagination.ts # 分页组件
+│   └── toast.ts    # Toast 提示组件
+├── routes/
+│   ├── admin.ts    # 后台路由
+│   └── api/
+│       ├── auth.ts # 用户注册/登录/获取信息
+│       └── index.ts# API 根路径
+├── db/
+│   └── schema.ts   # Drizzle 数据表定义
+├── middleware/
+│   └── auth.ts     # JWT 验证 & 管理员守卫
+└── shared/
+    └── utils.ts    # 工具函数
 ```
 
-A live public deployment of this template is available at [https://d1-template.templates.workers.dev](https://d1-template.templates.workers.dev)
+## 🔑 环境变量
 
-## Setup Steps
+| 变量 | 说明 |
+|------|------|
+| `API_KEY` | Master API Key，用于后台登录 |
+| `JWT_SECRET` | JWT 签名密钥 |
 
-1. Install the project dependencies with a package manager of your choice:
-   ```bash
-   npm install
-   ```
-2. Create a [D1 database](https://developers.cloudflare.com/d1/get-started/) with the name "d1-template-database":
-   ```bash
-   npx wrangler d1 create d1-template-database
-   ```
-   ...and update the `database_id` field in `wrangler.json` with the new database ID.
-3. Run the following db migration to initialize the database (notice the `migrations` directory in this project):
-   ```bash
-   npx wrangler d1 migrations apply --remote d1-template-database
-   ```
-4. Deploy the project!
-   ```bash
-   npx wrangler deploy
-   ```
+线上环境通过 Cloudflare Dashboard 配置（Settings → Variables），`wrangler.json` 中的值为本地开发使用。
+
+## 💡 功能特性
+
+- 用户注册 / 登录 / JWT 鉴权
+- 管理后台（账号密码或 API Key 登录）
+- 数据库表数据在线查看、多列模糊筛选、删除
+- API 密钥管理（创建 / 启用 / 禁用 / 删除）
+- 用户管理（创建 / 删除，支持选角色）
+- 操作日志自动记录
+- 深色 / 浅色模式切换
+
+## 📄 开源协议
+
+本项目基于 **MIT** 开源协议。
