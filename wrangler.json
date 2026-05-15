@@ -1,7 +1,5 @@
 {
 	"vars": {
-		"API_KEY": "dev-key-change-in-production",
-		"JWT_SECRET": "dev-jwt-secret-change-in-production"
 	},
 	"compatibility_date": "2025-10-08",
 	"main": "src/index.ts",
