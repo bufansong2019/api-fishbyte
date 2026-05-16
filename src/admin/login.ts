@@ -6,7 +6,7 @@ export function loginPage(error?: string): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>(function(){var t;try{t=localStorage.getItem("theme")}catch(e){}document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"))})();</script>
-  <title>登录 Admin</title>
+  <title>登录</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <style>
     .tab-bar { display: flex; gap: 0; border-bottom: 2px solid var(--pico-muted-border-color); margin-bottom: var(--pico-spacing); }
@@ -49,8 +49,9 @@ export function loginPage(error?: string): string {
         document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-        document.querySelectorAll('#login-form input').forEach(i => i.required = false);
-        document.querySelectorAll('#tab-' + btn.dataset.tab + ' input').forEach(i => i.required = true);
+        // 清空并禁用非当前 Tab 的输入框，避免一起提交
+        document.querySelectorAll('#login-form input').forEach(i => { i.required = false; i.disabled = true; i.value = ''; });
+        document.querySelectorAll('#tab-' + btn.dataset.tab + ' input').forEach(i => { i.required = true; i.disabled = false; });
       });
     });
   </script>

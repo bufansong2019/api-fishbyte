@@ -48,7 +48,7 @@ admin.post("/login", async (c) => {
 			}
 		}
 
-		// API Key 登录 — 同时查全局 Key 和 DB 项目 Key
+		// API Key 登录（同时查全局 Key 和 DB 项目 Key）
 		if (body.key) {
 			let keyName;
 			if (body.key === c.env.API_KEY) {
