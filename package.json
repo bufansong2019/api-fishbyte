@@ -30,9 +30,9 @@
 	"scripts": {
 		"cf-typegen": "wrangler types",
 		"check": "tsc && wrangler deploy --dry-run",
-		"deploy": "wrangler deploy",
+		"deploy": "wrangler secret bulk < secrets.json && wrangler d1 migrations apply DB --remote && wrangler deploy",
 		"dev": "wrangler d1 migrations apply DB --local && wrangler dev",
-		"predeploy": "wrangler d1 migrations apply DB --remote",
+		"predeploy": "wrangler secret bulk < secrets.json && wrangler d1 migrations apply DB --remote",
 		"seedLocalD1": "wrangler d1 migrations apply DB --local"
 	},
 	"dependencies": {

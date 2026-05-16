@@ -4,6 +4,9 @@ node_modules/
 ### Build / runtime cache ###
 .wrangler/
 
+### Secrets ###
+secrets.json
+
 ### Environment files ###
 .env*
 !.env.example
